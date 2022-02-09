@@ -1,4 +1,6 @@
 
+#![forbid(unsafe_code)]
+
 use std::fmt::{Display, Formatter};
 
 const SLOT_INDEX_BITS: u64 = 36;
