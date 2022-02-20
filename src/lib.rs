@@ -1,7 +1,8 @@
-
 #![forbid(unsafe_code)]
 
+use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
+use std::hash::{Hash, Hasher};
 
 const SLOT_INDEX_BITS: u64 = 36;
 const SLOT_INDEX_MASK: u64 = (1 << SLOT_INDEX_BITS) - 1;
@@ -596,9 +597,41 @@ impl<T> Slot<T> {
 }
 
 /// An `Index` reserves 36 bits for the position, 28 bits for the generation.
-#[derive(Clone, Copy, Debug, PartialOrd, Ord, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Eq)]
 pub struct Index {
     id: u64,
+}
+
+impl Ord for Index {
+    #[inline]
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.index().cmp(&other.index()) {
+            Ordering::Less => Ordering::Less,
+            Ordering::Equal => self.id.cmp(&other.id),
+            Ordering::Greater => Ordering::Greater,
+        }
+    }
+}
+
+impl PartialOrd for Index {
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for Index {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl Hash for Index {
+    #[inline]
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+    }
 }
 
 impl Index {
