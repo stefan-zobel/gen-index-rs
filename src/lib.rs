@@ -1,5 +1,7 @@
 #![forbid(unsafe_code)]
 
+mod graph;
+
 use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
