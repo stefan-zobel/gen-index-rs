@@ -99,3 +99,17 @@ impl<T> Graph<T> {
         false
     }
 }
+
+#[cfg(test)]
+mod graph_tests {
+    use super::*;
+
+    #[test]
+    fn test_1() {
+        let mut g: Graph<i32> = Graph::new();
+        let eleven = g.add_new_node(11);
+        let twenty_two = g.add_new_node(22);
+        let success = g.link_nodes(eleven, twenty_two);
+        assert!(success);
+    }
+}
